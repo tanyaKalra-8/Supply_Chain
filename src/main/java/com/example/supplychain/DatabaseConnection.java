@@ -28,6 +28,16 @@ public class DatabaseConnection {
         }
         return null;
     }
+    public int executeUpdateQuery (String query) {
+        Statement statement = getStatement();
+        try{
+            return statement.executeUpdate(query);
+        }
+        catch (Exception e) {
+            e.getStackTrace();
+        }
+        return 0;
+    }
 
     public static void main(String[] args) {
         DatabaseConnection databaseConnection = new DatabaseConnection();

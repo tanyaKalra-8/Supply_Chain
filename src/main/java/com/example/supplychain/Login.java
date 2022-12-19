@@ -31,6 +31,7 @@ public class Login {
     }
     public boolean customerLogin(String email, String password) {
         String query = String.format("SELECT * FROM customer WHERE email = '%s' AND password = '%s'",email,password);
+
         try{
             DatabaseConnection dbCon = new DatabaseConnection();
             ResultSet rs = dbCon.getQueryTable(query);
@@ -43,6 +44,7 @@ public class Login {
         }
         return false;
     }
+
 
 //    public static void main(String[] args) {
 //        Login login = new Login();
