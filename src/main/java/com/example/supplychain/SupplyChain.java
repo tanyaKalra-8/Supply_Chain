@@ -9,8 +9,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -28,32 +30,14 @@ public class SupplyChain extends Application {
 
     ProductDetails productDetails = new ProductDetails();
     Button globalLogin;
+    Button globalSignUp;
     Label customerEmail = null;
     Label notAMember = null;
-    Label signUp = null;
     String customer = null;
 
-    private GridPane headerBar(){
-        TextField searchText = new TextField();
-        Button searchButton = new Button("Search");
 
-        Image img = new Image("cart.png");
-        ImageView view = new ImageView(img);
-        view.setFitHeight(15);
-        view.setPreserveRatio(true);
+    private GridPane rightHeaderBar(){
 
-        Button cartButton = new Button("Cart");
-        cartButton.setGraphic(view);
-        searchButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                String productName = searchText.getText();
-
-                //clear body and put this new pane in the body
-                bodyPane.getChildren().clear();
-                bodyPane.getChildren().add(productDetails.getProductsByName(productName));
-            }
-        });
         globalLogin = new Button("Log In");
         globalLogin.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -64,6 +48,10 @@ public class SupplyChain extends Application {
 
             }
         });
+        ButtonShadow.draw(globalLogin);
+
+        globalSignUp = new Button("Sign Up");
+        ButtonShadow.draw(globalSignUp);
 
         customerEmail = new Label("Welcome User!");
         customerEmail.setTextFill(Color.web("#ECF0F1"));
@@ -71,8 +59,46 @@ public class SupplyChain extends Application {
         notAMember = new Label("Not a Member?");
         notAMember.setTextFill(Color.web("#ECF0F1"));
 
-        signUp = new Label("Sign-Up Now!");
-        signUp.setTextFill(Color.web("#ECF0F1"));
+        GridPane gridPane = new GridPane();
+
+        gridPane.setMinSize(bodyPane.getMinWidth(), headerBar+20);
+        gridPane.setAlignment(Pos.TOP_RIGHT);
+        gridPane.setVgap(5);
+        gridPane.setHgap(5);
+        gridPane.setStyle("-fx-background-color: #4A53A2");
+
+        gridPane.add(globalLogin,1,0);
+        gridPane.add(customerEmail,0,0);
+        gridPane.add(notAMember,0,1);
+        gridPane.add(globalSignUp,1,1);
+
+
+        return gridPane;
+    }
+
+    private GridPane leftHeaderBar(){
+        TextField searchText = new TextField();
+        Button searchButton = new Button("Search");
+        ButtonShadow.draw(searchButton);
+
+        Image img = new Image("cart.png");
+        ImageView view = new ImageView(img);
+        view.setFitHeight(15);
+        view.setPreserveRatio(true);
+
+        Button cartButton = new Button("Cart");
+        cartButton.setGraphic(view);
+        ButtonShadow.draw(cartButton);
+        searchButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                String productName = searchText.getText();
+
+                //clear body and put this new pane in the body
+                bodyPane.getChildren().clear();
+                bodyPane.getChildren().add(productDetails.getProductsByName(productName));
+            }
+        });
 
         GridPane gridPane = new GridPane();
 
@@ -86,10 +112,6 @@ public class SupplyChain extends Application {
         gridPane.add(cartButton,0,0);
         gridPane.add(searchText,29,0);
         gridPane.add(searchButton, 30,0);
-//        gridPane.add(globalLogin,55,0);
-//        gridPane.add(customerEmail,54,0);
-//        gridPane.add(notAMember,54,1);
-//        gridPane.add(signUp,54,2);
 
         return gridPane;
     }
@@ -102,7 +124,9 @@ public class SupplyChain extends Application {
         PasswordField passwordField = new PasswordField();
 
         Button loginButton = new Button("Login");
+        ButtonShadow.draw(loginButton);
         Button cancelButton = new Button("Cancel");
+        ButtonShadow.draw(cancelButton);
         loginButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -159,7 +183,9 @@ public class SupplyChain extends Application {
 
     private GridPane footerBar(){
         Button addToCartButton = new Button("Add To Cart");
+        ButtonShadow.draw(addToCartButton);
         Button buyNowButton = new Button("Buy Now");
+        ButtonShadow.draw(buyNowButton);
 //        buyNowButton.setStyle("-fx-background-color: #F8875F; ");
         Label messageLabel = new Label("");
         buyNowButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -180,13 +206,13 @@ public class SupplyChain extends Application {
 
 
         GridPane gridPane = new GridPane();
-        gridPane.setMinSize(bodyPane.getMinWidth(), headerBar-10);
+        gridPane.setMinSize(bodyPane.getMinWidth(), headerBar-5);
         gridPane.setVgap(5);
         gridPane.setHgap(20);
 //        gridPane.setStyle("-fx-background-color: #C0C0C0");
 
         gridPane.setAlignment(Pos.CENTER);
-        gridPane.setTranslateY(headerBar+height+5);
+        gridPane.setTranslateY(headerBar+height+10);
 
         gridPane.add(addToCartButton,0,0);
         gridPane.add(buyNowButton, 1,0);
@@ -200,11 +226,11 @@ public class SupplyChain extends Application {
         root.setPrefSize(width,height+2*headerBar);
 
         bodyPane.setMinSize(width,height);
-        bodyPane.setTranslateY(headerBar);
+        bodyPane.setTranslateY(headerBar+10);
 
         bodyPane.getChildren().addAll(productDetails.getAllProducts());
 
-        root.getChildren().addAll(headerBar(),bodyPane, footerBar());
+        root.getChildren().addAll(rightHeaderBar(),leftHeaderBar(),bodyPane, footerBar());
 
         return root;
     }
