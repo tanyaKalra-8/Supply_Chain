@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -28,11 +29,21 @@ public class SupplyChain extends Application {
     ProductDetails productDetails = new ProductDetails();
     Button globalLogin;
     Label customerEmail = null;
+    Label notAMember = null;
+    Label signUp = null;
     String customer = null;
 
     private GridPane headerBar(){
         TextField searchText = new TextField();
         Button searchButton = new Button("Search");
+
+        Image img = new Image("cart.png");
+        ImageView view = new ImageView(img);
+        view.setFitHeight(15);
+        view.setPreserveRatio(true);
+
+        Button cartButton = new Button("Cart");
+        cartButton.setGraphic(view);
         searchButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -57,20 +68,28 @@ public class SupplyChain extends Application {
         customerEmail = new Label("Welcome User!");
         customerEmail.setTextFill(Color.web("#ECF0F1"));
 
+        notAMember = new Label("Not a Member?");
+        notAMember.setTextFill(Color.web("#ECF0F1"));
+
+        signUp = new Label("Sign-Up Now!");
+        signUp.setTextFill(Color.web("#ECF0F1"));
 
         GridPane gridPane = new GridPane();
 
-        gridPane.setMinSize(bodyPane.getMinWidth(), headerBar-10);
+        gridPane.setMinSize(bodyPane.getMinWidth()-260, headerBar);
         gridPane.setVgap(5);
         gridPane.setHgap(5);
         gridPane.setStyle("-fx-background-color: #4A53A2");
 
         gridPane.setAlignment(Pos.CENTER);
 
-        gridPane.add(searchText,39,0);
-        gridPane.add(searchButton, 40,0);
-        gridPane.add(globalLogin,70,0);
-        gridPane.add(customerEmail,69,0);
+        gridPane.add(cartButton,0,0);
+        gridPane.add(searchText,29,0);
+        gridPane.add(searchButton, 30,0);
+//        gridPane.add(globalLogin,55,0);
+//        gridPane.add(customerEmail,54,0);
+//        gridPane.add(notAMember,54,1);
+//        gridPane.add(signUp,54,2);
 
         return gridPane;
     }
@@ -141,6 +160,7 @@ public class SupplyChain extends Application {
     private GridPane footerBar(){
         Button addToCartButton = new Button("Add To Cart");
         Button buyNowButton = new Button("Buy Now");
+//        buyNowButton.setStyle("-fx-background-color: #F8875F; ");
         Label messageLabel = new Label("");
         buyNowButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -208,7 +228,7 @@ public class SupplyChain extends Application {
     public void start(Stage stage) throws IOException {
 // FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
         Scene scene = new Scene(createContent());
-        stage.getIcons().add(new Image("C:\\Users\\Admin\\Downloads\\Logo.png"));
+        stage.getIcons().add(new Image("Logo.png"));
         stage.setTitle("Mini Amazon!");
         stage.setScene(scene);
         stage.show();
