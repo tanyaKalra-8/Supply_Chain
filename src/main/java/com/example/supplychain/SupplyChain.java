@@ -31,9 +31,11 @@ public class SupplyChain extends Application {
     ProductDetails productDetails = new ProductDetails();
     Button globalLogin;
     Button globalSignUp;
+    Button globalLogout;
     Label customerEmail = null;
     Label notAMember = null;
-    String customer = null;
+    String customer= null;
+    String Cname= null;
 
 
     private GridPane rightHeaderBar(){
@@ -51,26 +53,55 @@ public class SupplyChain extends Application {
         ButtonShadow.draw(globalLogin);
 
         globalSignUp = new Button("Sign Up");
+        globalSignUp.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                bodyPane.getChildren().clear();
+                bodyPane.getChildren().add(signUpPage());
+                globalSignUp.setDisable(true);
+
+            }
+        });
         ButtonShadow.draw(globalSignUp);
+
+        globalLogout = new Button("Logout");
+
+        globalLogout.setDisable(true);
+        globalLogout.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                customerEmail.setText("Welcome User!");
+                customer= null;
+                Cname=null;
+                globalLogin.setDisable(false);
+                globalLogout.setDisable(true);
+
+            }
+        });
+        ButtonShadow.draw(globalLogout);
 
         customerEmail = new Label("Welcome User!");
         customerEmail.setTextFill(Color.web("#ECF0F1"));
 
-        notAMember = new Label("Not a Member?");
+        notAMember = new Label("       Or");
         notAMember.setTextFill(Color.web("#ECF0F1"));
+
+        Label space = new Label("  ");
 
         GridPane gridPane = new GridPane();
 
         gridPane.setMinSize(bodyPane.getMinWidth(), headerBar+20);
-        gridPane.setAlignment(Pos.TOP_RIGHT);
+        gridPane.setAlignment(Pos.BASELINE_RIGHT);
         gridPane.setVgap(5);
         gridPane.setHgap(5);
         gridPane.setStyle("-fx-background-color: #4A53A2");
 
-        gridPane.add(globalLogin,1,0);
-        gridPane.add(customerEmail,0,0);
-        gridPane.add(notAMember,0,1);
-        gridPane.add(globalSignUp,1,1);
+        gridPane.add(globalLogout,3,0);
+        gridPane.add(globalLogin,2,0);
+        gridPane.add(space,4,0);
+        gridPane.add(customerEmail,1,0);
+        gridPane.add(notAMember,2,1);
+        gridPane.add(globalSignUp,3,1);
 
 
         return gridPane;
@@ -115,10 +146,99 @@ public class SupplyChain extends Application {
 
         return gridPane;
     }
+    private GridPane signUpPage() {
+        Label emailLabel = new Label("Email*");
+        Label passwordLabel = new Label("Create Password*");
+        Label first_nameLabel = new Label("First Name*");
+        Label last_nameLabel = new Label("Last Name");
+        Label addressLabel = new Label("Address*");
+        Label mobileLabel = new Label("Phone No.*");
+        Label messageLabel = new Label("");
+//        Label mandatory = new Label("*");
+//        mandatory.setTextFill(Color.web("#F3081A"));
+//        mandatory.setAlignment(Pos.TOP_LEFT);
+
+        TextField emailTextField = new TextField();
+        PasswordField passwordField = new PasswordField();
+        TextField first_nameTextField = new TextField();
+        TextField last_nameTextField = new TextField();
+        TextField addressTextField = new TextField();
+        TextField mobileTextField = new TextField();
+
+        Button signUpButton = new Button("Sign Up");
+        ButtonShadow.draw(signUpButton);
+        Button cancelButton = new Button("Cancel");
+        ButtonShadow.draw(cancelButton);
+
+        signUpButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+
+                String email = emailTextField.getText();
+                String password = passwordField.getText();
+                String first_name = first_nameTextField.getText();
+                String last_name = last_nameTextField.getText();
+                String address = addressTextField.getText();
+                String mobile = mobileTextField.getText();
+
+//                password = Signup.getEncryptedPassword(password);
+
+                if(Signup.customerSignup(email,password,first_name,last_name,address,mobile)) {
+                    messageLabel.setText("Login successful");
+                    globalSignUp.setDisable(true);
+
+                    bodyPane.getChildren().clear();
+                    bodyPane.getChildren().add(productDetails.getAllProducts());
+                }
+                else{
+                    messageLabel.setText("Please fill all Details Carefully!");
+                    globalSignUp.setDisable(false);
+                    passwordField.setText(null);
+                }
+            }
+        });
+        cancelButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                bodyPane.getChildren().clear();
+                bodyPane.getChildren().add(productDetails.getAllProducts());
+                globalSignUp.setDisable(false);
+
+            }
+        });
+
+        GridPane gridPane = new GridPane();
+        gridPane.setMinSize(bodyPane.getMinWidth(), bodyPane.getMinHeight());
+        gridPane.setVgap(5);
+        gridPane.setHgap(5);
+//        gridPane.setStyle("-fx-background-color: #C0C0C0");
+
+        gridPane.setAlignment(Pos.CENTER);
+
+        gridPane.add(emailLabel, 0,0);
+        gridPane.add(emailTextField,1,0);
+        gridPane.add(passwordLabel,0,1);
+        gridPane.add(passwordField,1,1);
+        gridPane.add(first_nameLabel,0,2);
+        gridPane.add(first_nameTextField,1,2);
+        gridPane.add(last_nameLabel,0,3);
+        gridPane.add(last_nameTextField,1,3);
+        gridPane.add(addressLabel,0,4);
+        gridPane.add(addressTextField,1,4);
+        gridPane.add(mobileLabel,0,5);
+        gridPane.add(mobileTextField,1,5);
+        gridPane.add(signUpButton,0,6);
+        gridPane.add(cancelButton,1,6);
+        gridPane.add(messageLabel,1,7);
+
+
+        return gridPane;
+    }
     private GridPane loginPage(){
         Label emailLabel = new Label("Email");
         Label passwordLabel = new Label("Password");
         Label messageLabel = new Label("");
+        Label signupMessage = new Label("Not a member yet?");
 
         TextField emailTextField = new TextField();
         PasswordField passwordField = new PasswordField();
@@ -127,17 +247,30 @@ public class SupplyChain extends Application {
         ButtonShadow.draw(loginButton);
         Button cancelButton = new Button("Cancel");
         ButtonShadow.draw(cancelButton);
+        Button signupButton = new Button("Sign Up");
+        ButtonShadow.draw(signupButton);
+        signupButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                bodyPane.getChildren().clear();
+                bodyPane.getChildren().add(signUpPage());
+                globalLogin.setDisable(false);
+                signupButton.setDisable(true);
+
+            }
+        });
         loginButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 String email = emailTextField.getText();
                 String password = passwordField.getText();
-                String name = customerLogin(email);
+                Cname = customerLogin(email);
 //                messageLabel.setText(email + " $$ " + password);
 
                 if(login.customerLogin(email,password)) {
-                    customer = name;
+                    customer = Cname;
                     messageLabel.setText("Login successful");
+                    globalLogout.setDisable(false);
                     globalLogin.setDisable(true);
 
                     customerEmail.setText("Welcome " + customer + "!");
@@ -177,6 +310,8 @@ public class SupplyChain extends Application {
         gridPane.add(loginButton,0,2);
         gridPane.add(cancelButton,1,2);
         gridPane.add(messageLabel,1,3);
+        gridPane.add(signupMessage,1,4);
+        gridPane.add(signupButton,1,5);
 
         return gridPane;
     }
