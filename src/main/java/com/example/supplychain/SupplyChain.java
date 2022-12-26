@@ -58,8 +58,6 @@ public class SupplyChain extends Application {
             public void handle(ActionEvent actionEvent) {
                 bodyPane.getChildren().clear();
                 bodyPane.getChildren().add(signUpPage());
-                globalSignUp.setDisable(true);
-
             }
         });
         ButtonShadow.draw(globalSignUp);
@@ -185,14 +183,11 @@ public class SupplyChain extends Application {
 
                 if(Signup.customerSignup(email,password,first_name,last_name,address,mobile)) {
                     messageLabel.setText("Login successful");
-                    globalSignUp.setDisable(true);
-
                     bodyPane.getChildren().clear();
                     bodyPane.getChildren().add(productDetails.getAllProducts());
                 }
                 else{
                     messageLabel.setText("Please fill all Details Carefully!");
-                    globalSignUp.setDisable(false);
                     passwordField.setText(null);
                 }
             }
@@ -255,8 +250,7 @@ public class SupplyChain extends Application {
                 bodyPane.getChildren().clear();
                 bodyPane.getChildren().add(signUpPage());
                 globalLogin.setDisable(false);
-                signupButton.setDisable(true);
-
+                globalSignUp.setDisable(true);
             }
         });
         loginButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -265,7 +259,6 @@ public class SupplyChain extends Application {
                 String email = emailTextField.getText();
                 String password = passwordField.getText();
                 Cname = customerLogin(email);
-//                messageLabel.setText(email + " $$ " + password);
 
                 if(login.customerLogin(email,password)) {
                     customer = Cname;
@@ -335,6 +328,22 @@ public class SupplyChain extends Application {
                 }
                 else  {
                     messageLabel.setText("Log-In/Sign-up to place order");
+                }
+            }
+        });
+
+        addToCartButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                Product selectedProduct = productDetails.getSelectedProduct();
+                if(selectedProduct == null) {
+                    messageLabel.setText("Ahh! Please select the product : (");
+                }
+                else if(Cart.cartProduct(customer, selectedProduct)) {
+                    messageLabel.setText("Product Added to Cart : )");
+                }
+                else  {
+                    messageLabel.setText("Log-In/Sign-up to Add to Cart");
                 }
             }
         });

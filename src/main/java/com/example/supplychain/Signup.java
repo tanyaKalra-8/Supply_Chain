@@ -38,6 +38,7 @@ public class Signup {
         if(email.equals("") || password.equals("") || first_name.equals("")|| address.equals("") || mobile.equals("")) {
             return false;
         }
+
         String query = "INSERT INTO customer (email,password,first_name,last_name,address,mobile) VALUES ('" + email + "' ,'" + password + "' ,'" + first_name + "' , '" + last_name + "' ,'" + address + "' ,'" + mobile + "')";
 
         try{
