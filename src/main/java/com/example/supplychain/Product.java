@@ -70,4 +70,24 @@ public class Product {
         }
         return productList;
     }
+
+    public static ObservableList<Product> getCartProducts(int customer_id) {
+        DatabaseConnection databaseConnection = new DatabaseConnection();
+        ObservableList<Product> productList = FXCollections.observableArrayList();
+        String selectProducts = String.format("Select * from cart where customer_id= %s", customer_id);
+        try{
+            ResultSet rs = databaseConnection.getQueryTable(selectProducts);
+            while(rs.next()) {
+                productList.add(new Product(
+                        rs.getInt("product_id"),
+                        rs.getString("name"),
+                        rs.getDouble("price"))
+                );
+            }
+        }
+        catch (Exception e) {
+            e.getStackTrace();
+        }
+        return productList;
+    }
 }

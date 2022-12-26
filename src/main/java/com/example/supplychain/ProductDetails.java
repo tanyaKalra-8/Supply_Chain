@@ -20,9 +20,6 @@ public class ProductDetails {
         TableColumn price = new TableColumn("Price");
         price.setCellValueFactory(new PropertyValueFactory<>("price"));
 
-//        ObservableList<Product> data = FXCollections.observableArrayList();
-//        data.add(new Product(1,"Lenovo",8429));
-//        data.add(new Product(2,"HP",85429));
         ObservableList<Product> products = Product.getAllProducts();
 
         productTable = new TableView<>();
@@ -38,6 +35,31 @@ public class ProductDetails {
 
         return tablePane;
     }
+
+    public Pane getCartProducts(int customerID) {
+        TableColumn id = new TableColumn("Id");
+        id.setCellValueFactory(new PropertyValueFactory<>("id"));
+        TableColumn name = new TableColumn("Name");
+        name.setCellValueFactory(new PropertyValueFactory<>("name"));
+        TableColumn price = new TableColumn("Price");
+        price.setCellValueFactory(new PropertyValueFactory<>("price"));
+
+        ObservableList<Product> products = Product.getCartProducts(customerID);
+
+        productTable = new TableView<>();
+        productTable.setItems(products);
+        productTable.getColumns().addAll(id,name,price);
+        productTable.setMinSize(SupplyChain.width, SupplyChain.height);
+        productTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        Pane tablePane= new Pane();
+//        tablePane.setStyle("-fx-background-color: #C0C0C0");
+        tablePane.setMinSize(SupplyChain.width, SupplyChain.height);
+        tablePane.getChildren().addAll(productTable);
+
+        return tablePane;
+    }
+
     public Pane getProductsByName(String productName) {
         TableColumn id = new TableColumn("Id");
         id.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -46,9 +68,6 @@ public class ProductDetails {
         TableColumn price = new TableColumn("Price");
         price.setCellValueFactory(new PropertyValueFactory<>("price"));
 
-//        ObservableList<Product> data = FXCollections.observableArrayList();
-//        data.add(new Product(1,"Lenovo",8429));
-//        data.add(new Product(2,"HP",85429));
         ObservableList<Product> products = Product.getProductsByName(productName);
 
         productTable = new TableView<>();

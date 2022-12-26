@@ -32,10 +32,14 @@ public class SupplyChain extends Application {
     Button globalLogin;
     Button globalSignUp;
     Button globalLogout;
+    Button backButton;
     Label customerEmail = null;
     Label notAMember = null;
     String customer= null;
     String Cname= null;
+
+    int customerID = 0;
+    int cID = 0;
 
 
     private GridPane rightHeaderBar(){
@@ -118,6 +122,14 @@ public class SupplyChain extends Application {
         Button cartButton = new Button("Cart");
         cartButton.setGraphic(view);
         ButtonShadow.draw(cartButton);
+        cartButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                bodyPane.getChildren().clear();
+                bodyPane.getChildren().add(productDetails.getCartProducts(customerID));
+                backButton.setDisable(false);
+            }
+        });
         searchButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -259,8 +271,10 @@ public class SupplyChain extends Application {
                 String email = emailTextField.getText();
                 String password = passwordField.getText();
                 Cname = customerLogin(email);
+                cID= customerID(email);
 
                 if(login.customerLogin(email,password)) {
+                    customerID = cID;
                     customer = Cname;
                     messageLabel.setText("Login successful");
                     globalLogout.setDisable(false);
@@ -314,8 +328,21 @@ public class SupplyChain extends Application {
         ButtonShadow.draw(addToCartButton);
         Button buyNowButton = new Button("Buy Now");
         ButtonShadow.draw(buyNowButton);
+        backButton = new Button("Back");
+        ButtonShadow.draw(backButton);
+        backButton.setDisable(true);
+
 //        buyNowButton.setStyle("-fx-background-color: #F8875F; ");
         Label messageLabel = new Label("");
+
+        backButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                bodyPane.getChildren().clear();
+                bodyPane.getChildren().add(productDetails.getAllProducts());
+                backButton.setDisable(true);
+            }
+        });
         buyNowButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -348,7 +375,6 @@ public class SupplyChain extends Application {
             }
         });
 
-
         GridPane gridPane = new GridPane();
         gridPane.setMinSize(bodyPane.getMinWidth(), headerBar-5);
         gridPane.setVgap(5);
@@ -358,9 +384,10 @@ public class SupplyChain extends Application {
         gridPane.setAlignment(Pos.CENTER);
         gridPane.setTranslateY(headerBar+height+10);
 
-        gridPane.add(addToCartButton,0,0);
-        gridPane.add(buyNowButton, 1,0);
-        gridPane.add(messageLabel,2,0);
+        gridPane.add(backButton,0,0);
+        gridPane.add(addToCartButton,1,0);
+        gridPane.add(buyNowButton, 2,0);
+        gridPane.add(messageLabel,3,0);
 
         return gridPane;
     }
@@ -393,6 +420,22 @@ public class SupplyChain extends Application {
             e.getStackTrace();
         }
         return null;
+    }
+
+    public int customerID(String email) {
+        String query = String.format("SELECT customer_id FROM customer WHERE email = '%s'",email);
+
+        try{
+            DatabaseConnection dbCon = new DatabaseConnection();
+            ResultSet rs = dbCon.getQueryTable(query);
+            if(rs != null && rs.next()){
+                return rs.getInt("customer_id");
+            }
+        }
+        catch(Exception e) {
+            e.getStackTrace();
+        }
+        return 0;
     }
     @Override
     public void start(Stage stage) throws IOException {
