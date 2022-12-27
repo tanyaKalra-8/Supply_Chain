@@ -473,6 +473,7 @@ public class SupplyChain extends Application {
     public void start(Stage stage) throws IOException {
 // FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
         Scene scene = new Scene(createContent());
+        stage.setResizable(false);
         stage.getIcons().add(new Image("Logo.png"));
         stage.setTitle("Mini Amazon!");
         stage.setScene(scene);
