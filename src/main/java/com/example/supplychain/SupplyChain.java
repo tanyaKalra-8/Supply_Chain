@@ -40,6 +40,7 @@ public class SupplyChain extends Application {
 
     int customerID = 0;
     int cID = 0;
+    boolean loginDone = false;
 
 
     private GridPane rightHeaderBar(){
@@ -73,6 +74,7 @@ public class SupplyChain extends Application {
             @Override
             public void handle(ActionEvent actionEvent) {
                 customerEmail.setText("Welcome User!");
+                loginDone=false;
                 customer= null;
                 Cname=null;
                 globalLogin.setDisable(false);
@@ -113,6 +115,8 @@ public class SupplyChain extends Application {
         TextField searchText = new TextField();
         Button searchButton = new Button("Search");
         ButtonShadow.draw(searchButton);
+        Label message = new Label();
+        message.setTextFill(Color.web("#ECF0F1"));
 
         Image img = new Image("cart.png");
         ImageView view = new ImageView(img);
@@ -125,9 +129,15 @@ public class SupplyChain extends Application {
         cartButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                bodyPane.getChildren().clear();
-                bodyPane.getChildren().add(productDetails.getCartProducts(customerID));
-                backButton.setDisable(false);
+                if(loginDone) {
+                    message.setText("");
+                    bodyPane.getChildren().clear();
+                    bodyPane.getChildren().add(productDetails.getCartProducts(customerID));
+                    backButton.setDisable(false);
+                }
+                else{
+                    message.setText("Login/sign up");
+                }
             }
         });
         searchButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -151,8 +161,9 @@ public class SupplyChain extends Application {
         gridPane.setAlignment(Pos.CENTER);
 
         gridPane.add(cartButton,0,0);
-        gridPane.add(searchText,29,0);
-        gridPane.add(searchButton, 30,0);
+        gridPane.add(message,1,0);
+        gridPane.add(searchText,28,0);
+        gridPane.add(searchButton, 29,0);
 
         return gridPane;
     }
@@ -194,7 +205,7 @@ public class SupplyChain extends Application {
 //                password = Signup.getEncryptedPassword(password);
 
                 if(Signup.customerSignup(email,password,first_name,last_name,address,mobile)) {
-                    messageLabel.setText("Login successful");
+                    messageLabel.setText("Sign-In successful");
                     bodyPane.getChildren().clear();
                     bodyPane.getChildren().add(productDetails.getAllProducts());
                 }
@@ -277,6 +288,7 @@ public class SupplyChain extends Application {
                     customerID = cID;
                     customer = Cname;
                     messageLabel.setText("Login successful");
+                    loginDone = true;
                     globalLogout.setDisable(false);
                     globalLogin.setDisable(true);
 
