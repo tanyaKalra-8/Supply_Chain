@@ -1,6 +1,8 @@
 package com.example.supplychain;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -41,6 +43,7 @@ public class SupplyChain extends Application {
     int customerID = 0;
     int cID = 0;
     boolean loginDone = false;
+    boolean cartPressed = false;
 
 
     private GridPane rightHeaderBar(){
@@ -130,6 +133,7 @@ public class SupplyChain extends Application {
             @Override
             public void handle(ActionEvent actionEvent) {
                 if(loginDone) {
+                    cartPressed= true;
                     message.setText("");
                     bodyPane.getChildren().clear();
                     bodyPane.getChildren().add(productDetails.getCartProducts(customerID));
@@ -350,6 +354,7 @@ public class SupplyChain extends Application {
         backButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
+                cartPressed= false;
                 bodyPane.getChildren().clear();
                 bodyPane.getChildren().add(productDetails.getAllProducts());
                 backButton.setDisable(true);
@@ -358,15 +363,30 @@ public class SupplyChain extends Application {
         buyNowButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                Product selectedProduct = productDetails.getSelectedProduct();
-                if(selectedProduct == null) {
-                    messageLabel.setText("Ahh! Please select the product : (");
+                if (cartPressed == false) {
+                    Product selectedProduct = productDetails.getSelectedProduct();
+                    if (selectedProduct == null) {
+                        messageLabel.setText("Ahh! Please select the product : (");
+                    } else if (Order.placeOrder(customer, selectedProduct)) {
+                        messageLabel.setText("Order placed! Thanks for shopping with us : )");
+                    } else {
+                        messageLabel.setText("Log-In/Sign-up to place order");
+                    }
                 }
-                else if(Order.placeOrder(customer, selectedProduct)) {
-                    messageLabel.setText("Order placed! Thanks for shopping with us : )");
-                }
-                else  {
-                    messageLabel.setText("Log-In/Sign-up to place order");
+                else{
+                    ObservableList<Product> productList = FXCollections.observableArrayList();
+                    productList = Product.getCartProducts(customerID);
+                    for(Product product : productList) {
+                        if(Order.placeOrder(customer,product)) {
+                            messageLabel.setText("Order placed! Thanks for shopping with us : )");
+                            Cart.removeCart(customerID);
+                            bodyPane.getChildren().clear();
+                            bodyPane.getChildren().add(productDetails.getCartProducts(customerID));
+                        }
+                        else {
+                            messageLabel.setText("Something went wrong : (");
+                        }
+                    }
                 }
             }
         });

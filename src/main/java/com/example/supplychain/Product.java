@@ -7,6 +7,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 
 public class Product {
@@ -90,4 +92,5 @@ public class Product {
         }
         return productList;
     }
+
 }
