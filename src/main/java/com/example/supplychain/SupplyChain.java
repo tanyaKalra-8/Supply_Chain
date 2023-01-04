@@ -349,7 +349,8 @@ public class SupplyChain extends Application {
         backButton.setDisable(true);
 
 //        buyNowButton.setStyle("-fx-background-color: #F8875F; ");
-        Label messageLabel = new Label("");
+        Label messageLabel = new Label("")       ;
+        messageLabel.setTextFill(Color.web("#ECF0F1"));
 
         backButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -408,6 +409,7 @@ public class SupplyChain extends Application {
         });
 
         GridPane gridPane = new GridPane();
+        gridPane.setStyle("-fx-background-color: #4A53A2");
         gridPane.setMinSize(bodyPane.getMinWidth(), headerBar-5);
         gridPane.setVgap(5);
         gridPane.setHgap(20);
@@ -474,8 +476,8 @@ public class SupplyChain extends Application {
 // FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
         Scene scene = new Scene(createContent());
         stage.setResizable(false);
-        stage.getIcons().add(new Image("Logo.png"));
-        stage.setTitle("Mini Amazon!");
+        stage.getIcons().add(new Image("Logo.jpg"));
+        stage.setTitle("Aapka Apna Store!");
         stage.setScene(scene);
         stage.show();
     }
